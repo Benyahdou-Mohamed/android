@@ -4,7 +4,6 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import org.koin.android.ext.koin.androidApplication
 import org.koin.androidx.viewmodel.dsl.viewModel
-
 import org.koin.core.module.Module
 import org.koin.dsl.module
 import pl.gov.mc.protego.BuildConfig
@@ -12,11 +11,11 @@ import pl.gov.mc.protego.backend.api.*
 import pl.gov.mc.protego.backend.domain.ProtegoServer
 import pl.gov.mc.protego.encryption.EncryptionKeyStore
 import pl.gov.mc.protego.encryption.RandomKey
-import pl.gov.mc.protego.realm.RealmEncryption
 import pl.gov.mc.protego.file.FileManager
 import pl.gov.mc.protego.information.AppInformation
 import pl.gov.mc.protego.information.PhoneInformation
 import pl.gov.mc.protego.information.Session
+import pl.gov.mc.protego.realm.RealmEncryption
 import pl.gov.mc.protego.realm.RealmInitializer
 import pl.gov.mc.protego.repository.SessionRepository
 import pl.gov.mc.protego.ui.base.CockpitShakeDetector
@@ -33,9 +32,9 @@ import timber.log.Timber
 import java.security.SecureRandom
 
 val viewModule: Module = module {
-    viewModel { RegistrationViewModel(get(), get(), get()) }
+    viewModel { RegistrationViewModel(get(), get(), get(), get()) }
     viewModel { RegistrationConfirmationViewModel(get()) }
-    viewModel { DashboardActivityViewModel(get()) }
+    viewModel { DashboardActivityViewModel(get(), get()) }
     viewModel { SplashScreenViewModel(get()) }
     viewModel { OnboardingViewModel() }
     single { MsisdnValidator() }
@@ -53,7 +52,7 @@ val filesModule: Module = module {
 }
 
 val appModule = module {
-    single { PhoneInformation() }
+    single { PhoneInformation(get()) }
     single { AppInformation() }
     single{
         androidApplication().getSharedPreferences("ProteGo",  android.content.Context.MODE_PRIVATE)
